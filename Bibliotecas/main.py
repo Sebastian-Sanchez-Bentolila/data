@@ -8,7 +8,7 @@ st.set_page_config(page_title="Dashboard de Bibliotecas", layout="wide")
 # Cargar datos
 @st.cache_data
 def load_data():
-    df = pd.read_csv("https://github.com/Sebastian-Sanchez-Bentolila/data/blob/main/Bibliotecas/data/biblioteca.csv")
+    df = pd.read_csv("https://githubcontent.com/Sebastian-Sanchez-Bentolila/data/blob/main/Bibliotecas/data/biblioteca.csv")
     return df
 
 df = load_data()
