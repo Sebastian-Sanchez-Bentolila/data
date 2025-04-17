@@ -2,14 +2,21 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from PIL import Image
+import requests
+from io import StringIO
 
 st.set_page_config(page_title="Dashboard de Bibliotecas", layout="wide")
 
 # Cargar datos
 @st.cache_data
 def load_data():
-    df = pd.read_csv("https://githubcontent.com/Sebastian-Sanchez-Bentolila/data/blob/main/Bibliotecas/data/biblioteca.csv")
-    return df
+    url = "https://githubcontent.com/Sebastian-Sanchez-Bentolila/data/blob/main/Bibliotecas/data/biblioteca.csv"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return df.read_csv(StringIO(response.text))
+    else:
+        st.error("Failed to load data from GitHub.")
+        return None
 
 df = load_data()
 
