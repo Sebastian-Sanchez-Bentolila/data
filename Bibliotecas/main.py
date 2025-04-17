@@ -13,7 +13,7 @@ def load_data():
     url = "https://raw.githubcontent.com/Sebastian-Sanchez-Bentolila/data/blob/main/Bibliotecas/data/biblioteca.csv"
     response = requests.get(url)
     if response.status_code == 200:
-        return df.read_csv(StringIO(response.text))
+        return pd.read_csv(StringIO(response.text))
     else:
         st.error("Failed to load data from GitHub.")
         return None
