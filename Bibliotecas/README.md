@@ -93,4 +93,3 @@ streamlit run main.py
 ---
 
 *"La ciencia de datos es el arte de convertir datos en decisiones."* 
-```
