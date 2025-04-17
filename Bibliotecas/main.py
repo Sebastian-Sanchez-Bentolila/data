@@ -10,7 +10,7 @@ st.set_page_config(page_title="Dashboard de Bibliotecas", layout="wide")
 # Cargar datos
 @st.cache_data
 def load_data():
-    url = "https://githubcontent.com/Sebastian-Sanchez-Bentolila/data/blob/main/Bibliotecas/data/biblioteca.csv"
+    url = "https://raw.githubcontent.com/Sebastian-Sanchez-Bentolila/data/blob/main/Bibliotecas/data/biblioteca.csv"
     response = requests.get(url)
     if response.status_code == 200:
         return df.read_csv(StringIO(response.text))
