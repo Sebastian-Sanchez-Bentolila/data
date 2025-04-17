@@ -10,15 +10,21 @@ st.set_page_config(page_title="Dashboard de Bibliotecas", layout="wide")
 # Cargar datos
 @st.cache_data
 def load_data():
-    url = "https://raw.githubcontent.com/Sebastian-Sanchez-Bentolila/data/blob/main/Bibliotecas/data/biblioteca.csv"
-    response = requests.get(url)
-    if response.status_code == 200:
+    url = "https://raw.githubusercontent.com/Sebastian-Sanchez-Bentolila/data/main/Bibliotecas/data/biblioteca.csv"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Lanza error si la solicitud falla
         return pd.read_csv(StringIO(response.text))
-    else:
-        st.error("Failed to load data from GitHub.")
-        return None
+    except Exception as e:
+        st.error(f"Error al cargar datos: {str(e)}")
+        return pd.DataFrame()
 
 df = load_data()
+
+# Verificar si tenemos datos antes de continuar
+if df.empty:
+    st.warning("No se pudieron cargar los datos. Por favor verifica la conexión o la fuente de datos.")
+    st.stop()  # Detiene la ejecución del script
 
 # Sidebar mejorado
 with st.sidebar:
