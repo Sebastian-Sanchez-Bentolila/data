@@ -7,29 +7,133 @@ from datetime import datetime
 from shapely import wkt
 
 # Configuración de la página
-st.set_page_config(layout="wide", page_title="Dashboard de Universidades BA", page_icon="🎓")
+st.set_page_config(
+    layout="wide", 
+    page_title="Universidades de Buenos Aires", 
+    page_icon="🏛️",
+    initial_sidebar_state="expanded"
+)
 
-# Estilos CSS personalizados
+# Estilos CSS personalizados para modo oscuro
 st.markdown("""
     <style>
+        :root {
+            --primary-color: #6c8ef5;
+            --secondary-color: #1e1e1e;
+            --accent-color: #ff7675;
+            --text-color: #e0e0e0;
+            --card-bg: #2d2d2d;
+        }
+        
         html, body, [class*="css"] {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
         }
+        
         .main {
-            background-color: #f7f9fc;
-            padding: 20px;
+            background-color: var(--secondary-color);
         }
-        h1, h2, h3 {
-            color: #34495e;
+        
+        .stApp {
+            background: var(--secondary-color);
         }
-        .block-container {
-            padding: 2rem;
+        
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--primary-color);
         }
+        
+        .stMetric {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .stMetric > div {
+            font-size: 1.1rem !important;
+            color: var(--text-color) !important;
+        }
+        
+        .stMetric > div:first-child {
+            color: #a0a0a0 !important;
+        }
+        
+        .stMetric > div:nth-child(2) {
+            color: var(--primary-color) !important;
+            font-weight: 600;
+            font-size: 1.8rem !important;
+        }
+        
+        .css-1v3fvcr, .stDataFrame {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stSidebar {
+            background-color: #1a1a1a !important;
+        }
+        
+        .sidebar .sidebar-content {
+            background: transparent !important;
+        }
+        
+        .sidebar-selectbox label, .sidebar-textinput label {
+            color: var(--text-color) !important;
+        }
+        
+        .stSelectbox, .stTextInput {
+            background-color: #333333 !important;
+            color: var(--text-color) !important;
+        }
+        
+        .st-bb, .st-at, .st-ae, .st-af, .st-ag, .st-ah, .st-ai, .st-aj, .st-ak, .st-al {
+            border-color: #444444 !important;
+        }
+        
         hr {
             border: 0;
-            height: 2px;
-            background: #e0e0e0;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(108,142,245,0.75), rgba(0,0,0,0));
             margin: 2rem 0;
+        }
+        
+        .author-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Ajustes para tablas en modo oscuro */
+        .dataframe th {
+            background-color: #333333 !important;
+            color: var(--text-color) !important;
+        }
+        
+        .dataframe td {
+            background-color: var(--card-bg) !important;
+            color: var(--text-color) !important;
+        }
+        
+        /* Ajustes para los gráficos de Plotly */
+        .js-plotly-plot .plotly, .js-plotly-plot .plotly div {
+            background-color: transparent !important;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -44,110 +148,190 @@ def load_data():
     return df
 
 def show_general_stats(df):
-    st.markdown("## 📊 Estadísticas Generales")
-    col1, col2, col3 = st.columns(3)
+    st.markdown("## 📊 Panorama General")
+    col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        st.metric("Total Instituciones", len(df))
+        st.metric("Total de Instituciones", len(df), help="Cantidad total de universidades e instituciones registradas")
     
     with col2:
-        st.metric("Públicas", len(df[df['regimen'] == 'Público']))
+        st.metric("Instituciones Públicas", len(df[df['regimen'] == 'Público']), help="Universidades de gestión estatal")
     
     with col3:
-        st.metric("Privadas", len(df[df['regimen'] == 'Privado']))
+        st.metric("Instituciones Privadas", len(df[df['regimen'] == 'Privado']), help="Universidades de gestión privada")
+    
+    with col4:
+        st.metric("Comunas con oferta", df['comuna'].nunique(), help="Cantidad de comunas con al menos una institución")
 
-    fig = px.pie(df, names='regimen', title='Distribución Público / Privado',
-                 color='regimen', color_discrete_map={'Público': '#4fc3f7', 'Privado': '#a5d6a7'},
-                 hole=0.4)
-    fig.update_traces(textinfo='percent+label')
-    st.plotly_chart(fig, use_container_width=True)
+    # Gráficos en dos columnas
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        fig = px.pie(df, names='regimen', title='Distribución por Tipo de Gestión',
+                    color='regimen', 
+                    color_discrete_map={'Público': '#6c8ef5', 'Privado': '#ff7675'},
+                    hole=0.4)
+        fig.update_traces(textinfo='percent+label', 
+                         marker=dict(line=dict(color='#2d2d2d', width=1)))
+        fig.update_layout(
+            showlegend=False,
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font=dict(color='#e0e0e0')
+        )
+        st.plotly_chart(fig, use_container_width=True)
 
-    st.markdown("<hr>", unsafe_allow_html=True)
+    with col2:
+        comuna_counts = df['comuna'].value_counts().reset_index()
+        comuna_counts.columns = ['Comuna', 'Cantidad']
+        fig = px.bar(comuna_counts, x='Comuna', y='Cantidad', 
+                     title='Distribución por Comuna',
+                     color='Comuna',
+                     color_discrete_sequence=px.colors.qualitative.Dark24)
+        fig.update_layout(
+            showlegend=False, 
+            xaxis_title="", 
+            yaxis_title="Cantidad",
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font=dict(color='#e0e0e0')
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("---")
 
 def show_interactive_map(df):
-    st.subheader("📍 Mapa Interactivo de Universidades en CABA")
-
+    st.markdown("## 🗺️ Mapa Georreferenciado")
+    st.markdown("Explora la ubicación de todas las instituciones universitarias en la Ciudad de Buenos Aires")
+    
     # Convertir la columna WKT_gkba a geometría y extraer coordenadas
     df["geometry"] = df["WKT_gkba"].apply(wkt.loads)
     df["lon"] = df["geometry"].apply(lambda p: p.x)
     df["lat"] = df["geometry"].apply(lambda p: p.y)
 
-    # Crear mapa centrado en CABA
-    mapa = folium.Map(location=[-34.61, -58.38], zoom_start=12, tiles="CartoDB Positron")
+    # Crear mapa centrado en CABA con estilo más moderno
+    mapa = folium.Map(
+        location=[-34.61, -58.38], 
+        zoom_start=12, 
+        tiles="CartoDB dark_matter",
+        control_scale=True,
+        prefer_canvas=True
+    )
 
-    # Agregar marcadores
+    # Agregar marcadores con clusters para mejor visualización
+    from folium.plugins import MarkerCluster
+    marker_cluster = MarkerCluster().add_to(mapa)
+
     for _, row in df.iterrows():
         nombre = row['universida']
         direccion = row['direccion_norm']
         barrio = row['barrio']
         regimen = row['regimen']
-        color = 'blue' if regimen == 'Privado' else 'green'
+        color = '#ff7675' if regimen == 'Privado' else '#6c8ef5'
+        icono = 'university' if regimen == 'Público' else 'school'
         
         popup_content = f"""
-        <b>{nombre}</b><br>
-        <i>{regimen}</i><br>
-        <b>Dirección:</b> {direccion}<br>
-        <b>Barrio:</b> {barrio}
+        <div style="width: 250px; color: #333;">
+            <h4 style="color: {color}; margin-bottom: 0.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">{nombre}</h4>
+            <p style="margin: 0.25rem 0;"><strong>Tipo:</strong> {regimen}</p>
+            <p style="margin: 0.25rem 0;"><strong>Dirección:</strong> {direccion}</p>
+            <p style="margin: 0.25rem 0;"><strong>Barrio:</strong> {barrio}</p>
+        </div>
         """
         
         folium.Marker(
             location=[row["lat"], row["lon"]],
-            popup=folium.Popup(popup_content, max_width=250),
+            popup=folium.Popup(popup_content, max_width=300),
             tooltip=nombre,
-            icon=folium.Icon(color=color)
-        ).add_to(mapa)
+            icon=folium.Icon(color=color, icon=icono, prefix='fa')
+        ).add_to(marker_cluster)
 
+    # Añadir control de capas
+    folium.LayerControl().add_to(mapa)
 
-    folium_static(mapa, width=1000, height=600)
+    # Mostrar mapa en un contenedor con sombra
+    with st.container():
+        folium_static(mapa, width=1200, height=650)
 
+    st.markdown("---")
 
 def show_author():
-    with st.container():
-        st.header("🧑💻 Sobre el Autor")
-        col1, col2 = st.columns([1, 3])
+    st.markdown("## 👨‍💻 Sobre el Proyecto")
+    
+    col1, col2 = st.columns([1, 3])
+    
+    with col1:
+        st.image("https://avatars.githubusercontent.com/u/97362291?v=4", 
+                width=200, 
+                caption="Sebastián Sánchez Bentolila")
+    
+    with col2:
+        st.markdown("""
+        **Científico de Datos** | Universidad Nacional Guillermo Brown  
         
-        with col1:
-            st.image("https://avatars.githubusercontent.com/u/97362291?v=4", 
-                    width=150, 
-                    caption="Sebastian Sanchez Bentolila")
+        🔧 **Stack técnico:**  
+        - Python • Streamlit • Pandas • Plotly • Folium  
         
-        with col2:
-            st.markdown("""
-            **Data Science Student** | Universidad Nacional Guillermo Brown  
-            
-            🔧 **Stack técnico:**  
-            <img src="https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white" width="70">
-            <img src="https://img.shields.io/badge/Streamlit-FF4B4B?logo=Streamlit&logoColor=white" width="80">
-            <img src="https://img.shields.io/badge/Pandas-150458?logo=pandas&logoColor=white" width="75">
-            <img src="https://img.shields.io/badge/Plotly-3F4F75?logo=plotly&logoColor=white" width="75">
-            
-            🌐 **Enlaces:**  
-            [Portfolio](https://sebastian-sanchez-bentolila.netlify.app/) • 
-            [LinkedIn](https://www.linkedin.com/in/sebastian-sanchez-bentolila/) • 
-            [GitHub](https://github.com/Sebastian-Sanchez-Bentolila)  
-            
-            📫 **Contacto:** sebastiansb3004@gmail.com  
-            
-            *"La ciencia de datos es el arte de convertir datos en decisiones."*
-            """, unsafe_allow_html=True)
-            
-    st.markdown("---")
-    st.markdown(f"🔄 Actualizado: {datetime.now().strftime('%B %Y')}")
+        🌐 **Enlaces:**  
+        [Portfolio](https://sebastian-sanchez-bentolila.netlify.app/) • 
+        [LinkedIn](https://www.linkedin.com/in/sebastian-sanchez-bentolila/) • 
+        [GitHub](https://github.com/Sebastian-Sanchez-Bentolila)  
+        
+        📫 **Contacto:** sebastiansb3004@gmail.com  
+        
+        *"Los datos no son información, la información no es conocimiento, el conocimiento no es comprensión."*
+        """)
+        
+    st.markdown(f"""
+    <div style="text-align: center; color: #a0a0a0; margin-top: 1rem;">
+        <i>Última actualización: {datetime.now().strftime('%d/%m/%Y %H:%M')}</i>
+    </div>
+    """, unsafe_allow_html=True)
 
 def show_filters_and_table(df):
-    st.sidebar.header("🎯 Filtros Avanzados")
+    st.sidebar.markdown("""
+        <div style="color: var(--text-color); padding: 0.5rem 0; border-bottom: 1px solid #444; margin-bottom: 1.5rem;">
+            <h2 style="color: var(--primary-color); margin: 0;">🔍 Filtros</h2>
+        </div>
+    """, unsafe_allow_html=True)
 
-    search_term = st.sidebar.text_input("🔎 Buscar por nombre")
-    regimen_options = ['Todos'] + list(df['regimen'].unique())
-    selected_regimen = st.sidebar.selectbox("🏛️ Tipo de Institución", regimen_options)
+    # Filtro de búsqueda
+    search_term = st.sidebar.text_input(
+        "Buscar por nombre", 
+        key="search",
+        help="Busca por nombre de universidad o unidad académica"
+    )
+    
+    # Filtros en acordeones
+    with st.sidebar.expander("🏛️ Tipo de Institución", expanded=True):
+        regimen_options = ['Todos'] + list(df['regimen'].unique())
+        selected_regimen = st.selectbox(
+            "Seleccionar tipo", 
+            regimen_options,
+            key="regimen",
+            label_visibility="collapsed"
+        )
 
-    comuna_options = ['Todas'] + sorted(df['comuna'].unique())
-    selected_comuna = st.sidebar.selectbox("📍 Comuna", comuna_options)
+    with st.sidebar.expander("📍 Ubicación", expanded=True):
+        comuna_options = ['Todas'] + sorted(df['comuna'].unique())
+        selected_comuna = st.selectbox(
+            "Filtrar por comuna", 
+            comuna_options,
+            key="comuna",
+            label_visibility="collapsed"
+        )
 
     if 'area' in df.columns:
-        area_options = ['Todas'] + sorted(df['area'].unique())
-        selected_area = st.sidebar.selectbox("🎓 Área de Estudio", area_options)
+        with st.sidebar.expander("🎓 Área de Estudio", expanded=True):
+            area_options = ['Todas'] + sorted(df['area'].unique())
+            selected_area = st.selectbox(
+                "Filtrar por área", 
+                area_options,
+                key="area",
+                label_visibility="collapsed"
+            )
 
+    # Aplicar filtros
     filtered_df = df.copy()
 
     if search_term:
@@ -166,43 +350,48 @@ def show_filters_and_table(df):
     if 'area' in df.columns and selected_area != 'Todas':
         filtered_df = filtered_df[filtered_df['area'] == selected_area]
 
-    st.markdown("## 🏫 Resultados de búsqueda")
-    st.dataframe(
-        filtered_df[['universida', 'unidad_aca', 'regimen', 'barrio', 'comuna', 'telef', 'web'] + (['area'] if 'area' in df.columns else [])],
-        column_config={
-            "universida": "Universidad",
-            "unidad_aca": "Unidad Académica",
-            "regimen": "Tipo",
-            "barrio": "Barrio",
-            "comuna": "Comuna",
-            "telef": "Teléfono",
-            "web": "Sitio Web",
-            "area": "Área de Estudio"
-        },
-        hide_index=True,
-        use_container_width=True
-    )
-
-    st.markdown("<hr>", unsafe_allow_html=True)
+    # Mostrar resultados
+    st.markdown("## 🏫 Resultados Filtrados")
+    
+    if len(filtered_df) == 0:
+        st.warning("No se encontraron resultados con los filtros aplicados.")
+    else:
+        st.dataframe(
+            filtered_df[['universida', 'unidad_aca', 'regimen', 'barrio', 'comuna', 'telef', 'web'] + (['area'] if 'area' in df.columns else [])],
+            column_config={
+                "universida": "Universidad",
+                "unidad_aca": "Unidad Académica",
+                "regimen": "Tipo",
+                "barrio": "Barrio",
+                "comuna": "Comuna",
+                "telef": "Teléfono",
+                "web": "Sitio Web",
+                "area": "Área de Estudio"
+            },
+            hide_index=True,
+            use_container_width=True,
+            height=min(600, 35 * (len(filtered_df) + 1))
+        )
 
 def show_study_areas(df):
-    st.subheader("Distribución por Áreas de Estudio")
+    st.markdown("## 📚 Distribución por Áreas de Estudio")
     
-    # Definir un mapeo más robusto de áreas de estudio
+    # Definir un mapeo de áreas de estudio
     area_keywords = {
-        'Medicina': r'Medicina|Salud|Enfermería|Bioquímica|Farmacia',
-        'Derecho': r'Derecho|Jurídicas|Abogacía',
-        'Ingeniería': r'Ingeniería|Tecnología|Informática|Sistemas',
-        'Economía': r'Económicas|Administración|Empresas|Negocios',
-        'Arquitectura': r'Arquitectura|Diseño|Urbanismo',
-        'Psicología': r'Psicología|Salud Mental',
-        'Sociales': r'Sociales|Humanidades|Educación|Comunicación',
-        'Artes': r'Artes|Música|Teatro|Cine',
-        'Ciencias': r'Ciencias|Física|Química|Matemática|Biología'
+        'Medicina y Salud': r'Medicina|Salud|Enfermería|Bioquímica|Farmacia|Kinesiología',
+        'Derecho': r'Derecho|Jurídicas|Abogacía|Notariado',
+        'Ingeniería y Tecnología': r'Ingeniería|Tecnología|Informática|Sistemas|Computación',
+        'Economía y Negocios': r'Económicas|Administración|Empresas|Negocios|Comercio|Contabilidad',
+        'Arquitectura y Diseño': r'Arquitectura|Diseño|Urbanismo|Paisajismo',
+        'Psicología': r'Psicología|Salud Mental|Terapia|Psicoanálisis',
+        'Ciencias Sociales': r'Sociales|Humanidades|Educación|Comunicación|Sociología|Antropología',
+        'Artes y Creatividad': r'Artes|Música|Teatro|Cine|Danza|Bellas Artes',
+        'Ciencias Exactas': r'Ciencias|Física|Química|Matemática|Biología|Geología',
+        'Agronomía y Alimentos': r'Agronomía|Veterinaria|Alimentos|Agricultura'
     }
     
     # Crear columna de área basada en coincidencias
-    df['area'] = 'Otra'
+    df['area'] = 'Otras Áreas'
     for area, pattern in area_keywords.items():
         mask = df['unidad_aca'].str.contains(pattern, case=False, na=False)
         df.loc[mask, 'area'] = area
@@ -214,30 +403,82 @@ def show_study_areas(df):
     # Ordenar por cantidad
     area_counts = area_counts.sort_values('Cantidad', ascending=False)
     
-    # Crear gráfico
+    # Crear gráfico de barras horizontales
     fig = px.bar(area_counts, 
-                 x='Área de Estudio', 
-                 y='Cantidad',
-                 title='Distribución de Áreas de Estudio',
+                 y='Área de Estudio', 
+                 x='Cantidad',
+                 title='Oferta Académica por Área de Estudio',
                  color='Área de Estudio',
-                 color_discrete_sequence=px.colors.qualitative.Pastel)
+                 color_discrete_sequence=px.colors.qualitative.Dark24,
+                 orientation='h')
     
     fig.update_layout(
-        xaxis_title='Área de Estudio',
-        yaxis_title='Cantidad de Unidades Académicas',
+        yaxis_title='',
+        xaxis_title='Cantidad de Unidades Académicas',
         showlegend=False,
-        hovermode='x unified'
+        hovermode='y unified',
+        height=600,
+        margin=dict(l=50, r=50, b=50, t=50),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#e0e0e0')
     )
     
-    st.plotly_chart(fig, use_container_width=True)
-
+    # Gráfico de treemap alternativo
+    fig2 = px.treemap(area_counts, 
+                     path=['Área de Estudio'], 
+                     values='Cantidad',
+                     title='Distribución Jerárquica por Áreas',
+                     color='Área de Estudio',
+                     color_discrete_sequence=px.colors.qualitative.Dark24)
+    
+    fig2.update_traces(textinfo="label+percent entry")
+    fig2.update_layout(
+        margin=dict(t=50, l=25, r=25, b=25),
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#e0e0e0')
+    )
+    
+    # Mostrar en pestañas
+    tab1, tab2 = st.tabs(["📊 Vista de Barras", "🌳 Vista de Árbol"])
+    
+    with tab1:
+        st.plotly_chart(fig, use_container_width=True)
+    
+    with tab2:
+        st.plotly_chart(fig2, use_container_width=True)
 
 if __name__ == "__main__":
-    st.title("🏛️ Dashboard de Universidades de Buenos Aires")
-    st.markdown("Exploración interactiva de instituciones educativas universitarias en la Ciudad Autónoma de Buenos Aires")
+    # Título con estilo
+    st.markdown("""
+        <div style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); 
+                   padding: 1.5rem; 
+                   border-radius: 12px; 
+                   border-left: 6px solid var(--primary-color);
+                   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                   margin-bottom: 2rem;">
+            <h1 style="color: var(--primary-color); margin: 0; display: flex; align-items: center; gap: 1rem;">
+                🏛️ Sistema de Información Universitaria de CABA
+            </h1>
+            <p style="margin: 0.5rem 0 0; color: var(--text-color);">
+                Exploración interactiva de la oferta académica superior en la Ciudad Autónoma de Buenos Aires
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    # Cargar datos
     df = load_data()
+    
+    # Mostrar secciones
     show_general_stats(df)
     show_filters_and_table(df)
-    show_interactive_map(df)
     show_study_areas(df)
+    show_interactive_map(df)
     show_author()
+    
+    # Footer
+    st.markdown("""
+        <div style="text-align: center; color: #a0a0a0; margin-top: 3rem; padding: 1rem; border-top: 1px solid #444;">
+            <p>© 2023 Sistema de Información Universitaria - Todos los derechos reservados</p>
+        </div>
+    """, unsafe_allow_html=True)
