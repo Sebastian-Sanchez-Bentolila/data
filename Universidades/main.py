@@ -304,7 +304,7 @@ def show_author():
         
         📫 **Contacto:** sebastiansb3004@gmail.com  
         
-        *"Los datos no son información, la información no es conocimiento, el conocimiento no es comprensión."*
+        *“La principal ventaja de los datos es que te dicen algo sobre el mundo que no sabías antes.” - Hilary Mason, Científica de datos y Fundadora, Fast Forward Labs*
         """)
         
     st.markdown(f"""
