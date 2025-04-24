@@ -146,13 +146,13 @@ def load_data():
     try:
         response = requests.get(url)
         response.raise_for_status()  # Lanza error si la solicitud falla
-        df = df.read_csv(StringIO(response.text))
+        df = pd.read_csv(StringIO(response.text))
         df['regimen'] = df['regimen'].str.strip()
         df['comuna'] = df['comuna'].fillna('Desconocida').astype(str)
-        return df.read_csv(StringIO(response.text))
+        return df
     except Exception as e:
         st.error(f"Error al cargar datos: {str(e)}")
-        return df.DataFrame()
+        return pd.DataFrame()  # Retorna un DataFrame vacío en caso de error
 
 def show_general_stats(df):
     st.markdown("## 📊 Panorama General")
