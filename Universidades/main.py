@@ -144,22 +144,11 @@ st.markdown("""
 def load_data():
     url = "https://raw.githubusercontent.com/Sebastian-Sanchez-Bentolila/data/main/Universidades/data/universidades.csv"
     try:
-        # Intenta leer el CSV con diferentes parámetros para manejar problemas de formato
-        response = requests.get(url)
-        response.raise_for_status()
+        # Leer el CSV con el delimitador correcto y manejo de errores
+        df = pd.read_csv(url, delimiter=';', on_bad_lines='warn')
         
-        # Prueba con diferentes configuraciones de lectura
-        try:
-            df = pd.read_csv(StringIO(response.text), quotechar='"', on_bad_lines='warn')
-        except:
-            df = pd.read_csv(StringIO(response.text), quotechar='"', on_bad_lines='skip')
-        
-        # Verifica que las columnas necesarias existan
-        required_columns = ['regimen', 'comuna', 'universida', 'direccion_norm', 'barrio', 'WKT_gkba']
-        for col in required_columns:
-            if col not in df.columns:
-                st.warning(f"Columna '{col}' no encontrada en los datos")
-                df[col] = None  # Añade la columna con valores nulos si no existe
+        # Limpieza de nombres de columnas (eliminar espacios extra)
+        df.columns = df.columns.str.strip()
         
         # Limpieza básica de datos
         if 'regimen' in df.columns:
@@ -178,7 +167,7 @@ def load_data():
         st.error(f"Error al cargar datos: {str(e)}")
         # Retorna un DataFrame con la estructura esperada pero vacío
         return pd.DataFrame(columns=['universida', 'unidad_aca', 'regimen', 'barrio', 
-                                   'comuna', 'telef', 'web', 'WKT_gkba'])
+                                   'comuna', 'telef', 'web'])
 
 def show_general_stats(df):
     st.markdown("## 📊 Panorama General")
