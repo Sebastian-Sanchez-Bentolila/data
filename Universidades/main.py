@@ -142,7 +142,7 @@ st.markdown("""
 
 @st.cache_data
 def load_data():
-    url = "https://raw.githubusercontent.com/Sebastian-Sanchez-Bentolila/data/blob/main/Universidades/data/universidades.csv"
+    url = "https://raw.githubusercontent.com/Sebastian-Sanchez-Bentolila/data/main/Universidades/data/universidades.csv"
     try:
         response = requests.get(url)
         response.raise_for_status()  # Lanza error si la solicitud falla
