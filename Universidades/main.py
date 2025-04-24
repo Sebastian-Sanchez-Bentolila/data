@@ -144,15 +144,41 @@ st.markdown("""
 def load_data():
     url = "https://raw.githubusercontent.com/Sebastian-Sanchez-Bentolila/data/main/Universidades/data/universidades.csv"
     try:
+        # Intenta leer el CSV con diferentes parámetros para manejar problemas de formato
         response = requests.get(url)
-        response.raise_for_status()  # Lanza error si la solicitud falla
-        df = pd.read_csv(StringIO(response.text))
-        df['regimen'] = df['regimen'].str.strip()
-        df['comuna'] = df['comuna'].fillna('Desconocida').astype(str)
+        response.raise_for_status()
+        
+        # Prueba con diferentes configuraciones de lectura
+        try:
+            df = pd.read_csv(StringIO(response.text), quotechar='"', on_bad_lines='warn')
+        except:
+            df = pd.read_csv(StringIO(response.text), quotechar='"', on_bad_lines='skip')
+        
+        # Verifica que las columnas necesarias existan
+        required_columns = ['regimen', 'comuna', 'universida', 'direccion_norm', 'barrio', 'WKT_gkba']
+        for col in required_columns:
+            if col not in df.columns:
+                st.warning(f"Columna '{col}' no encontrada en los datos")
+                df[col] = None  # Añade la columna con valores nulos si no existe
+        
+        # Limpieza básica de datos
+        if 'regimen' in df.columns:
+            df['regimen'] = df['regimen'].str.strip().fillna('Desconocido')
+        else:
+            df['regimen'] = 'Desconocido'
+            
+        if 'comuna' in df.columns:
+            df['comuna'] = df['comuna'].fillna('Desconocida').astype(str)
+        else:
+            df['comuna'] = 'Desconocida'
+            
         return df
+    
     except Exception as e:
         st.error(f"Error al cargar datos: {str(e)}")
-        return pd.DataFrame()  # Retorna un DataFrame vacío en caso de error
+        # Retorna un DataFrame con la estructura esperada pero vacío
+        return pd.DataFrame(columns=['universida', 'unidad_aca', 'regimen', 'barrio', 
+                                   'comuna', 'telef', 'web', 'WKT_gkba'])
 
 def show_general_stats(df):
     st.markdown("## 📊 Panorama General")
@@ -162,13 +188,16 @@ def show_general_stats(df):
         st.metric("Total de Instituciones", len(df), help="Cantidad total de universidades e instituciones registradas")
     
     with col2:
-        st.metric("Instituciones Públicas", len(df[df['regimen'] == 'Público']), help="Universidades de gestión estatal")
+        publicas = len(df[df['regimen'].str.contains('Público', case=False, na=False)])
+        st.metric("Instituciones Públicas", publicas, help="Universidades de gestión estatal")
     
     with col3:
-        st.metric("Instituciones Privadas", len(df[df['regimen'] == 'Privado']), help="Universidades de gestión privada")
+        privadas = len(df[df['regimen'].str.contains('Privado', case=False, na=False)])
+        st.metric("Instituciones Privadas", privadas, help="Universidades de gestión privada")
     
     with col4:
-        st.metric("Comunas con oferta", df['comuna'].nunique(), help="Cantidad de comunas con al menos una institución")
+        comunas = df['comuna'].nunique() if 'comuna' in df.columns else 0
+        st.metric("Comunas con oferta", comunas, help="Cantidad de comunas con al menos una institución")
 
     # Gráficos en dos columnas
     col1, col2 = st.columns(2)
