@@ -5,6 +5,8 @@ from streamlit_folium import folium_static
 import plotly.express as px
 from datetime import datetime
 from shapely import wkt
+import requests
+from io import StringIO
 
 # Configuración de la página
 st.set_page_config(
@@ -140,12 +142,17 @@ st.markdown("""
 
 @st.cache_data
 def load_data():
-    df = pd.read_csv("data\\universidades.csv", sep=";")
-    
-    df['regimen'] = df['regimen'].str.strip()
-    df['comuna'] = df['comuna'].fillna('Desconocida').astype(str)
-    
-    return df
+    url = "https://raw.githubusercontent.com/Sebastian-Sanchez-Bentolila/data/blob/main/Universidades/data/universidades.csv"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Lanza error si la solicitud falla
+        df = df.read_csv(StringIO(response.text))
+        df['regimen'] = df['regimen'].str.strip()
+        df['comuna'] = df['comuna'].fillna('Desconocida').astype(str)
+        return df.read_csv(StringIO(response.text))
+    except Exception as e:
+        st.error(f"Error al cargar datos: {str(e)}")
+        return df.DataFrame()
 
 def show_general_stats(df):
     st.markdown("## 📊 Panorama General")
