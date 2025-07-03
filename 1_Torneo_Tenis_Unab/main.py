@@ -485,18 +485,6 @@ def main():
             <a href="https://www.unab.edu.ar/contacto/" target="_blank">Contacto</a>
         </div>
         
-        <div class="footer-social">
-            <a href="https://facebook.com/unaboficial" target="_blank">
-                <i class="fab fa-facebook"></i>
-            </a>
-            <a href="https://twitter.com/unaboficial" target="_blank">
-                <i class="fab fa-twitter"></i>
-            </a>
-            <a href="https://instagram.com/unaboficial" target="_blank">
-                <i class="fab fa-instagram"></i>
-            </a>
-        </div>
-        
         <div class="copyright">
             © 2025 Torneo de Tenis UNaB - Todos los derechos reservados
         </div>
