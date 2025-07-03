@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from PIL import Image
 import numpy as np
+import requests
+from io import StringIO
 
 # Configuración de la página
 st.set_page_config(
@@ -16,8 +18,22 @@ st.set_page_config(
 # Cargar datos
 @st.cache_data
 def load_data():
-    estudiantes = pd.read_csv("data/estudiantes.csv")
-    resultados = pd.read_csv("data/resultados.csv")
+    url1 = "https://raw.githubusercontent.com/Sebastian-Sanchez-Bentolila/data/tree/main/1_Torneo_Tenis_Unab/data/estudiantes.csv"
+    url2 = "https://raw.githubusercontent.com/Sebastian-Sanchez-Bentolila/data/tree/main/1_Torneo_Tenis_Unab/data/resultados.csv"
+
+    try:
+        response = requests.get(url1)
+        response.raise_for_status()  # Lanza error si la solicitud falla
+        estudiantes = pd.read_csv(StringIO(response.text))
+        response = requests.get(url2)
+        response.raise_for_status()  # Lanza error si la solicitud falla
+        resultados = pd.read_csv(StringIO(response.text))
+        return estudiantes, resultados
+    except Exception as e:
+        st.error(f"Error al cargar datos: {str(e)}")
+        return pd.DataFrame()
+    
+    
     return estudiantes, resultados
 
 estudiantes, resultados = load_data()
