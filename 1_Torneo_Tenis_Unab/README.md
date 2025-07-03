@@ -58,7 +58,7 @@ requirements.txt
 1. Cloná el repositorio:
 
 ```bash
-git clone https://github.com/tuusuario/1-torneo-tenis-unab.git
+git clone https://github.com/Sebastian-Sanchez-Bentolila/data/tree/main/1_Torneo_Tenis_Unab.git
 cd torneo-tenis-unab
 ````
 
