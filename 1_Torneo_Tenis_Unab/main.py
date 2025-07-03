@@ -136,65 +136,33 @@ def main():
     }
     .footer {
         width: 100%;
-        background: linear-gradient(135deg, #0056b3 0%, #003366 100%);
+        background: #0056b3;
         color: white;
         text-align: center;
-        padding: 25px 10px;
-        margin-top: 50px;
+        padding: 20px 10px;
+        margin-top: 30px;
         position: relative;
-        box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .footer::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
     }
 
     .footer p {
-        margin: 0;
-        font-size: 1.1em;
-        letter-spacing: 0.5px;
+        margin: 5px 0;
+        font-size: 1em;
     }
 
     .footer a {
-        color: #fff;
+        color: white;
+        margin: 0 10px;
         text-decoration: none;
-        transition: all 0.3s ease;
-        font-weight: 600;
     }
 
     .footer a:hover {
-        color: #4facfe;
         text-decoration: underline;
     }
 
-    .footer-links {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        margin-top: 15px;
-    }
-
-    .footer-social {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin-top: 15px;
-    }
-
-    .footer-social i {
-        font-size: 1.5em;
-    }
-
-    .copyright {
-        margin-top: 20px;
-        font-size: 0.9em;
-        opacity: 0.8;
+    .footer-divider {
+        height: 1px;
+        background-color: rgba(255, 255, 255, 0.2);
+        margin: 10px 0;
     }
     .logo-container {
         position: absolute;
@@ -478,16 +446,13 @@ def main():
     st.markdown("""
     <div class="footer">
         <p>Universidad Nacional Guillermo Brown</p>
-        
-        <div class="footer-links">
+        <div class="footer-divider"></div>
+        <div>
             <a href="https://www.unab.edu.ar" target="_blank">Sitio Web</a>
             <a href="https://www.unab.edu.ar/deportes/" target="_blank">Deportes</a>
             <a href="https://www.unab.edu.ar/contacto/" target="_blank">Contacto</a>
         </div>
-        
-        <div class="copyright">
-            © 2025 Torneo de Tenis UNaB - Todos los derechos reservados
-        </div>
+        <p>© 2025 Torneo de Tenis UNaB - Todos los derechos reservados</p>
     </div>
     """, unsafe_allow_html=True)
 
