@@ -135,12 +135,66 @@ def main():
         border-left: 5px solid #0056b3;
     }
     .footer {
-    width: 100%;
-    background-color: #0056b3;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    margin-top: 30px;
+        width: 100%;
+        background: linear-gradient(135deg, #0056b3 0%, #003366 100%);
+        color: white;
+        text-align: center;
+        padding: 25px 10px;
+        margin-top: 50px;
+        position: relative;
+        box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .footer::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .footer p {
+        margin: 0;
+        font-size: 1.1em;
+        letter-spacing: 0.5px;
+    }
+
+    .footer a {
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-weight: 600;
+    }
+
+    .footer a:hover {
+        color: #4facfe;
+        text-decoration: underline;
+    }
+
+    .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 15px;
+    }
+
+    .footer-social {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .footer-social i {
+        font-size: 1.5em;
+    }
+
+    .copyright {
+        margin-top: 20px;
+        font-size: 0.9em;
+        opacity: 0.8;
     }
     .logo-container {
         position: absolute;
