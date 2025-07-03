@@ -18,8 +18,8 @@ st.set_page_config(
 # Cargar datos
 @st.cache_data
 def load_data():
-    url1 = "https://raw.githubusercontent.com/Sebastian-Sanchez-Bentolila/data/tree/main/1_Torneo_Tenis_Unab/data/estudiantes.csv"
-    url2 = "https://raw.githubusercontent.com/Sebastian-Sanchez-Bentolila/data/tree/main/1_Torneo_Tenis_Unab/data/resultados.csv"
+    url1 = "https://raw.githubusercontent.com/Sebastian-Sanchez-Bentolila/data/main/1_Torneo_Tenis_Unab/data/estudiantes.csv"
+    url2 = "https://raw.githubusercontent.com/Sebastian-Sanchez-Bentolila/data/main/1_Torneo_Tenis_Unab/data/resultados.csv"
 
     try:
         response = requests.get(url1)
