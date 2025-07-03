@@ -477,7 +477,29 @@ def main():
     # Footer
     st.markdown("""
     <div class="footer">
-        <p>© 2024 Universidad Nacional Guillermo Brown - Todos los derechos reservados</p>
+        <p>Universidad Nacional Guillermo Brown</p>
+        
+        <div class="footer-links">
+            <a href="https://www.unab.edu.ar" target="_blank">Sitio Web</a>
+            <a href="https://www.unab.edu.ar/deportes/" target="_blank">Deportes</a>
+            <a href="https://www.unab.edu.ar/contacto/" target="_blank">Contacto</a>
+        </div>
+        
+        <div class="footer-social">
+            <a href="https://facebook.com/unaboficial" target="_blank">
+                <i class="fab fa-facebook"></i>
+            </a>
+            <a href="https://twitter.com/unaboficial" target="_blank">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="https://instagram.com/unaboficial" target="_blank">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+        
+        <div class="copyright">
+            © 2025 Torneo de Tenis UNaB - Todos los derechos reservados
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
