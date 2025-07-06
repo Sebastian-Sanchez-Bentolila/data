@@ -1243,3 +1243,38 @@ img {
 .plotly .main-svg {
     overflow: visible !important;
 }
+
+/* Agrega esto al archivo style.css */
+.player-info img {
+    width: 100%;
+    height: auto;
+    max-height: 120px; /* Ajusta según necesidad */
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+/* Para pantallas grandes */
+@media (min-width: 768px) {
+    .podium-place {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .player-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    
+    .player-info img {
+        max-height: 150px;
+        width: 90%;
+        margin: 0 auto 10px;
+    }
+    
+    .first .player-info img {
+        max-height: 180px;
+    }
+}
