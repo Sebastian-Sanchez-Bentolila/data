@@ -1244,37 +1244,50 @@ img {
     overflow: visible !important;
 }
 
-/* Agrega esto al archivo style.css */
+/* Agrega esto al final de tu archivo style.css */
+.podium-place {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+}
+
+.player-info {
+    width: 100%;
+    text-align: center;
+}
+
 .player-info img {
     width: 100%;
     height: auto;
-    max-height: 120px; /* Ajusta según necesidad */
-    object-fit: cover;
+    max-height: 120px;
+    object-fit: contain;
     border-radius: 8px;
     margin-bottom: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-/* Para pantallas grandes */
+/* Ajustes específicos para desktop */
 @media (min-width: 768px) {
     .podium-place {
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .player-info {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-    
-    .player-info img {
-        max-height: 150px;
-        width: 90%;
-        margin: 0 auto 10px;
+        justify-content: flex-start;
     }
     
     .first .player-info img {
-        max-height: 180px;
+        max-height: 150px;
+    }
+    
+    .second .player-info img,
+    .third .player-info img {
+        max-height: 120px;
+    }
+}
+
+/* Ajustes para móviles */
+@media (max-width: 767px) {
+    .player-info img {
+        max-height: 100px;
     }
 }

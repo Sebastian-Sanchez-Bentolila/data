@@ -355,82 +355,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Gráfico de distribución por carrera (mejorado)
+        // Calcular datos para los gráficos
         const carreraCounts = estudiantes.reduce((acc, est) => {
             acc[est.Carrera] = (acc[est.Carrera] || 0) + 1;
             return acc;
         }, {});
 
-        Plotly.newPlot('carrera-chart', [{
-            values: Object.values(carreraCounts),
-            labels: Object.keys(carreraCounts),
-            type: 'pie',
-            textinfo: 'percent+label',
-            insidetextorientation: 'radial',
-            marker: {
-                colors: ['#0056b3', '#0077cc', '#4a90e2', '#003d7a', '#7fb3ff'],
-                line: {
-                    color: '#fff',
-                    width: 1
-                }
-            },
-            hoverinfo: 'label+percent+value',
-            textfont: {
-                size: 12
-            }
-        }], {
-            title: 'Distribución por Carrera',
-            titlefont: {
-                size: 14
-            },
-            margin: {
-                t: 40, // espacio superior para el título
-                b: 20, // espacio inferior
-                l: 20, // espacio izquierdo
-                r: 20  // espacio derecho
-            },
-            showlegend: false
-        });
-
-        // Gráfico de distribución por edad (mejorado)
-        Plotly.newPlot('edad-chart', [{
-            x: estudiantes.map(e => e.Edad),
-            type: 'histogram',
-            marker: {
-                color: '#0056b3',
-                line: {
-                    color: '#fff',
-                    width: 1
-                }
-            },
-            xbins: {
-                size: 5 // tamaño del bin para agrupar edades
-            }
-        }], {
-            title: 'Distribución por Edad',
-            titlefont: {
-                size: 14
-            },
-            xaxis: {
-                title: 'Edad',
-                titlefont: {
-                    size: 12
-                }
-            },
-            yaxis: {
-                title: 'Cantidad',
-                titlefont: {
-                    size: 12
-                }
-            },
-            margin: {
-                t: 40,
-                b: 50, // más espacio para el eje X
-                l: 50, // más espacio para el eje Y
-                r: 20
-            }
-        });
-
-        // Gráfico de edades por carrera (mejorado)
         const carreraEdades = {};
         estudiantes.forEach(est => {
             if (!carreraEdades[est.Carrera]) {
@@ -439,35 +369,76 @@ document.addEventListener('DOMContentLoaded', function() {
             carreraEdades[est.Carrera].push(est.Edad);
         });
 
+        // Configuración responsive
+        const isMobile = window.innerWidth <= 767;
+        const mobileLayout = {
+            margin: { t: 30, b: 30, l: 30, r: 30, pad: 5 },
+            font: { size: 10 },
+            titlefont: { size: 12 }
+        };
+        const desktopLayout = {
+            margin: { t: 40, b: 20, l: 20, r: 20, pad: 5 },
+            font: { size: 12 },
+            titlefont: { size: 14 }
+        };
+        const layout = isMobile ? mobileLayout : desktopLayout;
+
+        // Gráfico de distribución por carrera
+        Plotly.newPlot('carrera-chart', [{
+            values: Object.values(carreraCounts),
+            labels: Object.keys(carreraCounts),
+            type: 'pie',
+            textinfo: 'percent+label',
+            textposition: 'inside',
+            insidetextorientation: 'radial',
+            marker: {
+                colors: ['#0056b3', '#0077cc', '#4a90e2', '#003d7a', '#7fb3ff'],
+                line: { color: '#fff', width: 1 }
+            },
+            hoverinfo: 'label+percent+value'
+        }], {
+            title: 'Distribución por Carrera',
+            ...layout,
+            showlegend: false
+        });
+
+        // Gráfico de distribución por edad
+        Plotly.newPlot('edad-chart', [{
+            x: estudiantes.map(e => e.Edad),
+            type: 'histogram',
+            marker: { color: '#0056b3' },
+            xbins: { size: isMobile ? 2 : 5 }
+        }], {
+            title: 'Distribución por Edad',
+            ...layout,
+            xaxis: { title: 'Edad' },
+            yaxis: { title: 'Cantidad' }
+        });
+
+        // Gráfico de edades por carrera
         const boxPlotData = Object.keys(carreraEdades).map(carrera => ({
             y: carreraEdades[carrera],
-            name: carrera.length > 15 ? carrera.substring(0, 12) + '...' : carrera, // acorta nombres largos
+            name: carrera.length > 15 ? carrera.substring(0, 12) + '...' : carrera,
             type: 'box',
-            marker: {
-                color: '#0056b3',
-                size: 5
-            },
-            boxpoints: 'all',
-            jitter: 0.3,
-            pointpos: -1.8
+            marker: { color: '#0056b3' },
+            boxpoints: isMobile ? false : 'all'
         }));
 
         Plotly.newPlot('edad-carrera-chart', boxPlotData, {
             title: 'Edades por Carrera',
-            titlefont: {
-                size: 14
-            },
-            yaxis: {
-                title: 'Edad',
-                titlefont: {
-                    size: 12
-                }
-            },
-            margin: {
-                t: 40,
-                b: 50,
-                l: 50,
-                r: 20
+            ...layout,
+            yaxis: { title: 'Edad' }
+        });
+
+        // Redibujar gráficos al cambiar tamaño de pantalla
+        window.addEventListener('resize', function() {
+            const currentIsMobile = window.innerWidth <= 767;
+            if (currentIsMobile !== isMobile) {
+                initCharts(statsA, statsB);
+            } else {
+                ['carrera-chart', 'edad-chart', 'edad-carrera-chart'].forEach(id => {
+                    Plotly.Plots.resize(document.getElementById(id));
+                });
             }
         });
     }
