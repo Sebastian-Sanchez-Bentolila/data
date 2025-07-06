@@ -251,21 +251,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p>Puntos: ${topPlayers[2].Puntos}</p>
             `;
         }
-
-        // Cargar imágenes de los ganadores si existen
-        [1, 2, 3].forEach((position, index) => {
-            if (topPlayers[index]) {
-                const imgPath = `images/ganador${position}_grupo${grupo}.jpeg`;
-                fetch(imgPath)
-                    .then(response => {
-                        if (response.ok) {
-                            const playerInfo = document.querySelector(`#${index === 0 ? 'primer' : index === 1 ? 'segundo' : 'tercer'}-lugar`);
-                            playerInfo.innerHTML = `<img src="${imgPath}" alt="Ganador ${position}° Grupo ${grupo}" style="width:100%; border-radius:8px; margin-bottom:10px;">` + playerInfo.innerHTML;
-                        }
-                    })
-                    .catch(() => {});
-            }
-        });
     }
 
     // Función para inicializar los gráficos
