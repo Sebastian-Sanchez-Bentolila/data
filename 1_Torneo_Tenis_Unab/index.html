@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torneo de Tenis UNaB 2025</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap">
+    <link rel="stylesheet" href="asset/style.css">
+    <link rel="icon" href="images/tenis.png">
+    <!-- Plotly JS -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header con logo y título -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="images/unab_logo3.jpg" alt="Logo UNAB" class="logo">
+                <div class="logo-text">
+                    <span>Universidad Nacional</span>
+                    <span>Guillermo Brown</span>
+                </div>
+            </div>
+            <div class="header-titles">
+                <h1>Torneo de Tenis UNaB 2025</h1>
+                <p class="subtitle">Realizado del 13 al 27 de Junio de 2025 en el predio del Club San Albano</p>
+                <p class="location"><i class="fas fa-map-marker-alt"></i> Espora 4920, Burzaco</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Barra de navegación -->
+    <nav class="tabs-container">
+        <div class="tabs">
+            <button class="tab-button active" data-tab="resultados"><i class="fas fa-trophy"></i> Resultados</button>
+            <button class="tab-button" data-tab="participantes"><i class="fas fa-users"></i> Participantes</button>
+            <button class="tab-button" data-tab="galeria"><i class="fas fa-camera"></i> Galería</button>
+            <button class="tab-button" data-tab="deportes"><i class="fas fa-table-tennis"></i> Promoción Deportiva</button>
+            <button class="tab-button" data-tab="autor"><i class="fas fa-user-tie"></i> Sobre el Autor</button>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <!-- Pestaña de Resultados -->
+        <section id="resultados" class="tab-content active">
+            <div class="section-header">
+                <h2><i class="fas fa-trophy"></i> Resultados del Torneo</h2>
+                <div class="select-group">
+                    <label for="grupo-select">Selecciona un grupo:</label>
+                    <select id="grupo-select" class="custom-select">
+                        <option value="todos">Todos</option>
+                        <option value="A">Grupo A</option>
+                        <option value="B">Grupo B</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="stats-container" id="stats-container">
+                <!-- Se llenará dinámicamente con JavaScript -->
+            </div>
+
+            <div class="results-container">
+                <div class="podio-section">
+                    <h3>Podio de Ganadores</h3>
+                    <div class="podio">
+                        <div class="podium-place second">
+                            <div class="podium-position">2°</div>
+                            <div class="player-info" id="segundo-lugar">
+                                <!-- JS lo completará -->
+                            </div>
+                        </div>
+                        <div class="podium-place first">
+                            <div class="podium-position">1°</div>
+                            <div class="player-info" id="primer-lugar">
+                                <!-- JS lo completará -->
+                            </div>
+                        </div>
+                        <div class="podium-place third">
+                            <div class="podium-position">3°</div>
+                            <div class="player-info" id="tercer-lugar">
+                                <!-- JS lo completará -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-section">
+                    <h3>Estadísticas Comparativas</h3>
+                    <div class="charts-grid">
+                        <div class="chart-container" id="chart1"></div>
+                        <div class="chart-container" id="chart2"></div>
+                        <div class="chart-container" id="chart3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="matches-section">
+                <h3>Resultados por Jornada</h3>
+                <div class="matches-tabs" id="jornadas-tabs">
+                    <!-- JS generará las pestañas de jornadas -->
+                </div>
+                <div class="matches-table-container" id="matches-table">
+                    <!-- JS llenará con los partidos -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Pestaña de Participantes -->
+        <section id="participantes" class="tab-content">
+            <div class="section-header">
+                <h2><i class="fas fa-users"></i> Información de los Participantes</h2>
+                <div class="select-group">
+                    <label for="grupo-part-select">Filtrar por grupo:</label>
+                    <select id="grupo-part-select" class="custom-select">
+                        <option value="todos">Todos</option>
+                        <option value="A">Grupo A</option>
+                        <option value="B">Grupo B</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="participants-table-container">
+                <table id="participants-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Grupo</th>
+                            <th>Carrera</th>
+                            <th>Edad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- JS llenará esta tabla -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="demographics-section">
+                <h3>Estadísticas de los Participantes</h3>
+                <div class="demographics-grid">
+                    <!-- Gráfico 1 - Distribución por Carrera (sola columna) -->
+        <div class="demographic-chart full-width">
+            <h4>Distribución por Carrera</h4>
+            <div class="chart-container" id="carrera-chart"></div>
+        </div>
+        
+        <!-- Gráfico 2 - Distribución por Edad (sola columna) -->
+        <div class="demographic-chart full-width">
+            <h4>Distribución por Edad</h4>
+            <div class="chart-container" id="edad-chart"></div>
+        </div>
+        
+        <!-- Gráfico 3 - Edades por Carrera (sola columna) -->
+        <div class="demographic-chart full-width">
+            <h4>Edades por Carrera</h4>
+            <div class="chart-container" id="edad-carrera-chart"></div>
+        </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pestaña de Galería -->
+        <section id="galeria" class="tab-content">
+            <div class="section-header">
+                <h2><i class="fas fa-camera"></i> Galería del Torneo</h2>
+            </div>
+
+            <div class="gallery-container">
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="images/ganador1_grupoA.jpeg" alt="Ganador 1 Grupo A">
+                        <div class="gallery-caption">Ganador 1° Grupo A</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="images/ganador1_grupoB.jpeg" alt="Ganador 1 Grupo B">
+                        <div class="gallery-caption">Ganador 1° Grupo B</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="images/ganador2_grupoA.jpeg" alt="Ganador 2 Grupo A">
+                        <div class="gallery-caption">Ganador 2° Grupo A</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="images/ganador2_grupoB.jpeg" alt="Ganador 2 Grupo B">
+                        <div class="gallery-caption">Ganador 2° Grupo B</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="images/ganador3_grupoA.jpeg" alt="Ganador 3 Grupo A">
+                        <div class="gallery-caption">Ganador 3° Grupo A</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="images/ganador3_grupoB.jpeg" alt="Ganador 3 Grupo B">
+                        <div class="gallery-caption">Ganador 3° Grupo B</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pestaña de Promoción Deportiva -->
+        <section id="deportes" class="tab-content">
+            <div class="section-header">
+                <h2><i class="fas fa-table-tennis"></i> Promoción Deportiva</h2>
+            </div>
+
+            <div class="sports-promo-container">
+                <div class="sports-card">
+                    <div class="sports-card-content">
+                        <h3>El Deporte en la UNaB</h3>
+                        <p>En la Universidad Nacional Guillermo Brown creemos en el deporte como herramienta para el crecimiento personal, la disciplina y la salud física y mental. El torneo de tenis es solo una de las muchas actividades deportivas que organizamos durante el año.</p>
+                        
+                        <h4>El tenis fortalece habilidades como:</h4>
+                        <ul class="sports-benefits">
+                            <li><i class="fas fa-bullseye"></i> Concentración y enfoque</li>
+                            <li><i class="fas fa-bolt"></i> Toma de decisiones bajo presión</li>
+                            <li><i class="fas fa-dumbbell"></i> Perseverancia y resiliencia</li>
+                            <li><i class="fas fa-trophy"></i> Competitividad</li>
+                        </ul>
+                        
+                        <p class="call-to-action">¡Anímate a sumarte a las actividades deportivas y a estos torneos internos!</p>
+                    </div>
+                    <div class="sports-card-image">
+                        <img src="images/tenis_promo.jpg" alt="Promoción del tenis">
+                    </div>
+                </div>
+
+                <div class="sports-link-container">
+                    <a href="https://www.unab.edu.ar/deportes/" target="_blank" class="sports-link-button">
+                        <i class="fas fa-external-link-alt"></i> Más información sobre deportes en la UNaB
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pestaña Sobre el Autor -->
+        <section id="autor" class="tab-content">
+            <div class="section-header">
+                <h2><i class="fas fa-user-tie"></i> Sobre el Autor</h2>
+            </div>
+
+            <div class="author-container">
+                <div class="author-card">
+                    <div class="author-image">
+                        <img src="images/Sebas.jpg" alt="Sebastian Sanchez Bentolila">
+                    </div>
+                    <div class="author-info">
+                        <h3>Sebastian Sanchez Bentolila</h3>
+                        <p class="author-title">Estudiante de Ciencia de Datos – UNaB</p>
+                        
+                        <blockquote class="author-quote">
+                            "Apasionado por el análisis de datos, el deporte y la tecnología aplicada a la educación y el bienestar."
+                        </blockquote>
+                        
+                        <div class="author-links">
+                            <a href="https://www.linkedin.com/in/sebastian-sanchez-bentolila/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                            <a href="https://github.com/Sebastian-Sanchez-Bentolila" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                            <a href="mailto:sebastiansb3004@gmail.com"><i class="fas fa-envelope"></i> sebastiansb3004@gmail.com</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-info">
+                    <h3>Acerca de este Dashboard</h3>
+                    <p>Este dashboard fue desarrollado de forma independiente con el fin de mostrar los resultados del Torneo de Tenis UNaB 2025 de manera interactiva y visualmente atractiva.</p>
+                    
+                    <h4>Tecnologías utilizadas:</h4>
+                    <ul class="tech-list">
+                        <li><i class="fab fa-python"></i> Python (Pandas, NumPy)</li>
+                        <li><i class="fas fa-chart-line"></i> Plotly para visualizaciones</li>
+                        <li><i class="fab fa-html5"></i> HTML5 &amp; CSS3</li>
+                        <li><i class="fab fa-js"></i> JavaScript</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="images/unab_logo_blanco.png" alt="UNAB Logo" class="footer-logo-img"/>
+            </div>
+            <div class="footer-links">
+		<ul>
+                    <li><a href="https://www.unab.edu.ar" target="_blank">Sitio Web</a></li>
+                    <li><a href="https://www.unab.edu.ar/deportes/" target="_blank">Deportes</a></li>
+                    <li><a href="https://www.unab.edu.ar/contacto/" target="_blank">Contacto</a></li>
+		    <li><a href="https://www.unab.edu.ar/carreras/" target="_blank">Carreras</a></li>
+		</ul>
+            </div>
+            <div class="footer-copyright">
+                <p>© 2025 Torneo de Tenis UNaB - Todos los derechos reservados</p>
+                <p>Desarrollado por Sebastian Sanchez Bentolila</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="asset/script.js"></script>
+</body>
+</html>
+
