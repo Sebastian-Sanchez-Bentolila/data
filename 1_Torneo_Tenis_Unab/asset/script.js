@@ -277,11 +277,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         ];
 
-        Plotly.newPlot('chart1', chart1Data, {
+        /*Plotly.newPlot('chart1', chart1Data, {
             title: 'Distribución de Puntos por Grupo',
             yaxis: { title: 'Puntos' },
             showlegend: false
-        });
+        });*/
 
         // Gráfico 2: Relación Games a Favor/En Contra
         const combinedStats = [
@@ -306,6 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ...combinedStats.map(p => p.GC)
         ) + 5;
 
+        /*
         Plotly.newPlot('chart2', chart2Data, {
             title: 'Games a favor vs. games en contra',
             xaxis: { title: 'Games a favor', range: [0, maxValue] },
@@ -321,12 +322,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     dash: 'dash'
                 }
             }]
-        });
+        });*/
 
         // Gráfico 3: Promedio de Puntos por Grupo
         const avgA = statsA.reduce((sum, p) => sum + p.Puntos, 0) / statsA.length;
         const avgB = statsB.reduce((sum, p) => sum + p.Puntos, 0) / statsB.length;
 
+        /*
         Plotly.newPlot('chart3', [{
             x: ['Grupo A', 'Grupo B'],
             y: [avgA, avgB],
@@ -337,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }], {
             title: 'Promedio de puntos por grupo',
             yaxis: { title: 'Puntos promedio' }
-        });
+        });*/
 
         // Gráfico de distribución por carrera (mejorado)
         // Calcular datos para los gráficos
@@ -368,6 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         const layout = isMobile ? mobileLayout : desktopLayout;
 
+        /*
         // Gráfico de distribución por carrera
         Plotly.newPlot('carrera-chart', [{
             values: Object.values(carreraCounts),
@@ -385,8 +388,9 @@ document.addEventListener('DOMContentLoaded', function() {
             title: 'Distribución por Carrera',
             ...layout,
             showlegend: false
-        });
+        });*/
 
+        /*
         // Gráfico de distribución por edad
         Plotly.newPlot('edad-chart', [{
             x: estudiantes.map(e => e.Edad),
@@ -398,7 +402,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ...layout,
             xaxis: { title: 'Edad' },
             yaxis: { title: 'Cantidad' }
-        });
+        });*/
 
         // Gráfico de edades por carrera
         const boxPlotData = Object.keys(carreraEdades).map(carrera => ({
@@ -409,12 +413,14 @@ document.addEventListener('DOMContentLoaded', function() {
             boxpoints: isMobile ? false : 'all'
         }));
 
+        /*
         Plotly.newPlot('edad-carrera-chart', boxPlotData, {
             title: 'Edades por Carrera',
             ...layout,
             yaxis: { title: 'Edad' }
-        });
+        });*/
 
+        
         // Redibujar gráficos al cambiar tamaño de pantalla
         window.addEventListener('resize', function() {
             const currentIsMobile = window.innerWidth <= 767;
