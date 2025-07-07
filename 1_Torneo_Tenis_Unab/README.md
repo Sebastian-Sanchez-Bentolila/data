@@ -120,5 +120,3 @@ Estudiante de Ciencia de Datos en UNaB
 ---
 
 ⭐ **Si te sirvió como inspiración o aprendizaje, no dudes en darle una estrella al repositorio y seguir mi trabajo.**
-
-Si te resultó útil, no dudes en dejar una estrella ⭐ en el repositorio y seguir mi trabajo para más dashboards y aplicaciones de datos.
